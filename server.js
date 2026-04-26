@@ -34,14 +34,21 @@ app.post('/stkpush', async (req, res) => {
     for (let rawPhone of numbers) {
       const phone = normalizePhone(rawPhone);
       try {
-        const response = await axios.post(
-          ENDPOINT,
-          {
-            phone: phone,
-            amount: Number(amount),
-            account_reference: reference || 'PAYMENT',
-            description: reference || 'Payment'
-          },
+        const response = await axios({
+  method: 'POST',
+  url: ENDPOINT,
+  data: {
+    phone: phone,
+    amount: Number(amount),
+    account_reference: reference || 'TEST',
+    description: reference || 'Payment'
+  },
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': API_KEY   // ⚠️ NO Bearer
+  }
+});
           {
             headers: {
               'Authorization': `Bearer ${API_KEY}`,
