@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bulk STK Push</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 700px; margin: auto; }
+    textarea, input { width: 100%; margin-bottom: 10px; padding: 10px; }
+    button { padding: 12px; width: 100%; cursor: pointer; }
+    pre { background: #f4f4f4; padding: 10px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+<h2>Bulk STK Push</h2>
+
+<label>Phone Numbers (comma separated)</label>
+<textarea id="numbers" placeholder="2547XXXXXXXX,2547XXXXXXXX"></textarea>
+
+<label>Amount</label>
+<input type="number" id="amount" />
+
+<label>Reference / Description</label>
+<input type="text" id="reference" />
+
+<button onclick="sendSTK()">Send STK Push</button>
+
+<h3>Response</h3>
+<pre id="output"></pre>
+
+<script>
+async function sendSTK() {
+  const numbers = document.getElementById('numbers').value
+    .split(',')
+    .map(n => n.trim())
+    .filter(Boolean);
+
+  const amount = document.getElementById('amount').value;
+  const reference = document.getElementById('reference').value;
+
+  const res = await fetch('/stkpush', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ numbers, amount, reference })
+  });
+
+  const data = await res.json();
+  document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
